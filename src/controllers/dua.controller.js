@@ -3,30 +3,47 @@ const { db } = require("../db/db");
 const getAllCategory = async (req, res) => {
   try {
     const sql = `WITH OrderedSubcategories AS (
-        SELECT 
-            *
-        FROM 
-            sub_category
-        ORDER BY 
-            id ASC
-    )
     SELECT 
-        c.id,
-        c.cat_id,
-        c.cat_name_bn,
-        c.cat_name_en,
-        c.no_of_subcat,
-        c.no_of_dua,
-        c.cat_icon,
-        JSON_GROUP_ARRAY(
-            JSON_OBJECT(
-                'id', os.id,
-                'subcar_id', os.subcat_id,
-                'subcat_name_bn', os.subcat_name_bn,
-                'subcat_name_en', os.subcat_name_en,
-                'no_of_dua', os.no_of_dua
+        *
+    FROM 
+        sub_category
+    ORDER BY 
+        id ASC
+    ),
+    OrderedDuas AS (
+      SELECT 
+          *
+      FROM 
+          dua
+    )
+  SELECT 
+    c.id AS category_id,
+    c.cat_id,
+    c.cat_name_bn,
+    c.cat_name_en,
+    c.no_of_subcat,
+    c.no_of_dua,
+    c.cat_icon,
+    JSON_GROUP_ARRAY(
+        JSON_OBJECT(
+            'id', os.id,
+            'subcat_id', os.subcat_id,
+            'subcat_name_bn', os.subcat_name_bn,
+            'subcat_name_en', os.subcat_name_en,
+            'no_of_dua', os.no_of_dua,
+            'dua_names', (
+                SELECT JSON_GROUP_ARRAY(
+                    JSON_OBJECT(
+                        'dua_id', d.dua_id,
+                        'dua_name_bn', d.dua_name_bn,
+                        'dua_name_en', d.dua_name_en
+                    )
+                )
+                FROM OrderedDuas d
+                WHERE d.subcat_id = os.subcat_id
             )
-        ) AS sub_cats
+        )
+      ) AS sub_cats
     FROM 
         category c
     LEFT JOIN 
