@@ -28,6 +28,7 @@ const getAllCategory = async (req, res) => {
         JSON_OBJECT(
             'id', os.id,
             'subcat_id', os.subcat_id,
+            'cat_id', os.cat_id,
             'subcat_name_bn', os.subcat_name_bn,
             'subcat_name_en', os.subcat_name_en,
             'no_of_dua', os.no_of_dua,
@@ -36,7 +37,9 @@ const getAllCategory = async (req, res) => {
                     JSON_OBJECT(
                         'dua_id', d.dua_id,
                         'dua_name_bn', d.dua_name_bn,
-                        'dua_name_en', d.dua_name_en
+                        'dua_name_en', d.dua_name_en,
+                        'dua_cat', d.cat_id,
+                        'dua_subcat', d.subcat_id
                     )
                 )
                 FROM OrderedDuas d
