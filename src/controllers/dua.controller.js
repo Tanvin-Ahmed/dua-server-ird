@@ -37,9 +37,14 @@ const getAllCategory = async (req, res) => {
         c.id, c.cat_id, c.cat_name_bn, c.cat_name_en, c.no_of_subcat, c.no_of_dua, c.cat_icon
     ORDER BY 
         c.id ASC;`;
+
     db.all(sql, (err, result) => {
       if (err) return res.status(404).json({ message: err.message });
-      return res.status(200).json(result);
+      return res
+        .status(200)
+        .json(
+          result.map((cat) => ({ ...cat, sub_cats: JSON.parse(cat.sub_cats) }))
+        );
     });
   } catch (error) {
     return res.status(500).json({ message: "something went wrong" });
