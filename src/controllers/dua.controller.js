@@ -71,45 +71,6 @@ const getAllCategory = async (req, res) => {
   }
 };
 
-const getSubcategoriesByCategoryId = async (req, res) => {
-  try {
-    const catId = req.params.catId;
-    const sql = `SELECT * FROM sub_category WHERE cat_id =${catId} ORDER BY cat_id ASC`;
-    db.all(sql, (err, result) => {
-      if (err) return res.status(404).json({ message: err.message });
-      return res.status(200).json(result);
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "something went wrong" });
-  }
-};
-
-const getDuaByCatAndSubCatId = async (req, res) => {
-  try {
-    const { catId, subCatId } = req.params;
-    const sql = `SELECT * FROM dua WHERE cat_id=${catId} AND subcat_id=${subCatId}`;
-    db.all(sql, (err, result) => {
-      if (err) return res.status(404).json({ message: err.message });
-      return res.status(200).json(result);
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "something went wrong" });
-  }
-};
-
-const getDuaNameByCatAndSubCatId = async (req, res) => {
-  try {
-    const { catId, subCatId } = req.params;
-    const sql = `SELECT cat_id, subcat_id, dua_id, dua_name_en, dua_name_bn FROM dua WHERE cat_id=${catId} AND subcat_id=${subCatId} ORDER BY dua_id ASC`;
-    db.all(sql, (err, result) => {
-      if (err) return res.status(404).json({ message: err.message });
-      return res.status(200).json(result);
-    });
-  } catch (error) {
-    return res.status(500).json({ message: "something went wrong" });
-  }
-};
-
 const getCategoryNameByCatId = async (req, res) => {
   try {
     const { catId } = req.params;
@@ -193,9 +154,6 @@ const getAllInfoOfCategory = async (req, res) => {
 
 module.exports = {
   getAllCategory,
-  getSubcategoriesByCategoryId,
-  getDuaByCatAndSubCatId,
-  getDuaNameByCatAndSubCatId,
   getCategoryNameByCatId,
   getAllInfoOfCategory,
 };
